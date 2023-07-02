@@ -1,0 +1,194 @@
+{
+  "project_info": {
+    "project_number": "543923773093",
+    "project_id": "etymos-auth",
+    "storage_bucket": "etymos-auth.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:543923773093:android:841f9d6ff807ff8246374c",
+        "android_client_info": {
+          "package_name": "Etymos.etymos"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "543923773093-593650dqblf609qf7gk8jqlnljlcf0t9.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "Etymos.etymos",
+            "certificate_hash": "9bbb3186b2189ef16d8f272bdab59362c395cbb4"
+          }
+        },
+        {
+          "client_id": "543923773093-q7epsll8k6q0sotjkme9lpnr7f62fkcv.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCZY-ngOtUyufLozRVJhuwo3jWEXKEL1Ds"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "543923773093-q7epsll8k6q0sotjkme9lpnr7f62fkcv.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "543923773093-0b5kiu9j0it82g10gee07mavpcjqoe3i.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "Etymos.etymos"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:543923773093:android:1abb368f3514ac0946374c",
+        "android_client_info": {
+          "package_name": "com.etymos"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "543923773093-i3pmmu3jb0u3f497pbjjmmgv0vrgrsh2.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.etymos",
+            "certificate_hash": "9bbb3186b2189ef16d8f272bdab59362c395cbb4"
+          }
+        },
+        {
+          "client_id": "543923773093-q7epsll8k6q0sotjkme9lpnr7f62fkcv.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCZY-ngOtUyufLozRVJhuwo3jWEXKEL1Ds"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "543923773093-q7epsll8k6q0sotjkme9lpnr7f62fkcv.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "543923773093-0b5kiu9j0it82g10gee07mavpcjqoe3i.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "Etymos.etymos"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:543923773093:android:58c83a90c0fc5dde46374c",
+        "android_client_info": {
+          "package_name": "com.etymos.etymos"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "543923773093-m7vvnc1sv7g7kt280ve32stsjcpqbl2v.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.etymos.etymos",
+            "certificate_hash": "9bbb3186b2189ef16d8f272bdab59362c395cbb4"
+          }
+        },
+        {
+          "client_id": "543923773093-q7epsll8k6q0sotjkme9lpnr7f62fkcv.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCZY-ngOtUyufLozRVJhuwo3jWEXKEL1Ds"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "543923773093-q7epsll8k6q0sotjkme9lpnr7f62fkcv.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "543923773093-0b5kiu9j0it82g10gee07mavpcjqoe3i.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "Etymos.etymos"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:543923773093:android:4e371277132aba6046374c",
+        "android_client_info": {
+          "package_name": "com.example.etymos"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "543923773093-cdb1q8vqjuhiihf4lvncjer9ens2451s.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.etymos",
+            "certificate_hash": "9bbb3186b2189ef16d8f272bdab59362c395cbb4"
+          }
+        },
+        {
+          "client_id": "543923773093-obg30e6vq5js84a6akam3b17sd2pv506.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.etymos",
+            "certificate_hash": "87a3b3c6c0163e98cb25e5f22f7bfba0ddba2cdc"
+          }
+        },
+        {
+          "client_id": "543923773093-q7epsll8k6q0sotjkme9lpnr7f62fkcv.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCZY-ngOtUyufLozRVJhuwo3jWEXKEL1Ds"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "543923773093-q7epsll8k6q0sotjkme9lpnr7f62fkcv.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "543923773093-0b5kiu9j0it82g10gee07mavpcjqoe3i.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "Etymos.etymos"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
