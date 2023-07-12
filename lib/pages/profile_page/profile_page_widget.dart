@@ -1,10 +1,13 @@
 import '/auth/firebase_auth/auth_util.dart';
 import '/backend/backend.dart';
+import '/backend/firebase_storage/storage.dart';
 import '/flutter_flow/flutter_flow_expanded_image_view.dart';
 import '/flutter_flow/flutter_flow_icon_button.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
+import '/flutter_flow/upload_data.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -29,6 +32,8 @@ class _ProfilePageWidgetState extends State<ProfilePageWidget> {
   void initState() {
     super.initState();
     _model = createModel(context, () => ProfilePageModel());
+
+    logFirebaseEvent('screen_view', parameters: {'screen_name': 'profilePage'});
   }
 
   @override
@@ -61,6 +66,8 @@ class _ProfilePageWidgetState extends State<ProfilePageWidget> {
               size: 30.0,
             ),
             onPressed: () async {
+              logFirebaseEvent('PROFILE_arrow_back_rounded_ICN_ON_TAP');
+              logFirebaseEvent('IconButton_navigate_back');
               context.safePop();
             },
           ),
@@ -118,23 +125,119 @@ class _ProfilePageWidgetState extends State<ProfilePageWidget> {
                                     hoverColor: Colors.transparent,
                                     highlightColor: Colors.transparent,
                                     onTap: () async {
+                                      logFirebaseEvent(
+                                          'PROFILE_PAGE_PAGE_ProfileImage_ON_TAP');
+                                      logFirebaseEvent(
+                                          'ProfileImage_expand_image');
                                       await Navigator.push(
                                         context,
                                         PageTransition(
                                           type: PageTransitionType.fade,
                                           child: FlutterFlowExpandedImageView(
                                             image: CachedNetworkImage(
-                                              imageUrl: currentUserPhoto,
+                                              imageUrl: valueOrDefault<String>(
+                                                currentUserPhoto,
+                                                'https://image.shutterstock.com/image-illustration/cyberpunk-soldier-city-warfare-3d-260nw-2021856803.jpg',
+                                              ),
                                               fit: BoxFit.contain,
                                             ),
                                             allowRotation: false,
-                                            tag: currentUserPhoto,
+                                            tag: valueOrDefault<String>(
+                                              currentUserPhoto,
+                                              'https://image.shutterstock.com/image-illustration/cyberpunk-soldier-city-warfare-3d-260nw-2021856803.jpg',
+                                            ),
                                             useHeroAnimation: true,
                                           ),
                                         ),
                                       );
                                     },
+                                    onDoubleTap: () async {
+                                      logFirebaseEvent(
+                                          'PROFILE_ProfileImage_ON_DOUBLE_TAP');
+                                      logFirebaseEvent(
+                                          'ProfileImage_upload_media_to_firebase');
+                                      final selectedMedia =
+                                          await selectMediaWithSourceBottomSheet(
+                                        context: context,
+                                        allowPhoto: true,
+                                      );
+                                      if (selectedMedia != null &&
+                                          selectedMedia.every((m) =>
+                                              validateFileFormat(
+                                                  m.storagePath, context))) {
+                                        setState(() =>
+                                            _model.isDataUploading = true);
+                                        var selectedUploadedFiles =
+                                            <FFUploadedFile>[];
+
+                                        var downloadUrls = <String>[];
+                                        try {
+                                          showUploadMessage(
+                                            context,
+                                            'Uploading file...',
+                                            showLoading: true,
+                                          );
+                                          selectedUploadedFiles = selectedMedia
+                                              .map((m) => FFUploadedFile(
+                                                    name: m.storagePath
+                                                        .split('/')
+                                                        .last,
+                                                    bytes: m.bytes,
+                                                    height:
+                                                        m.dimensions?.height,
+                                                    width: m.dimensions?.width,
+                                                    blurHash: m.blurHash,
+                                                  ))
+                                              .toList();
+
+                                          downloadUrls = (await Future.wait(
+                                            selectedMedia.map(
+                                              (m) async => await uploadData(
+                                                  m.storagePath, m.bytes),
+                                            ),
+                                          ))
+                                              .where((u) => u != null)
+                                              .map((u) => u!)
+                                              .toList();
+                                        } finally {
+                                          ScaffoldMessenger.of(context)
+                                              .hideCurrentSnackBar();
+                                          _model.isDataUploading = false;
+                                        }
+                                        if (selectedUploadedFiles.length ==
+                                                selectedMedia.length &&
+                                            downloadUrls.length ==
+                                                selectedMedia.length) {
+                                          setState(() {
+                                            _model.uploadedLocalFile =
+                                                selectedUploadedFiles.first;
+                                            _model.uploadedFileUrl =
+                                                downloadUrls.first;
+                                          });
+                                          showUploadMessage(
+                                              context, 'Success!');
+                                        } else {
+                                          setState(() {});
+                                          showUploadMessage(
+                                              context, 'Failed to upload data');
+                                          return;
+                                        }
+                                      }
+
+                                      logFirebaseEvent(
+                                          'ProfileImage_backend_call');
+
+                                      await currentUserReference!
+                                          .update(createUsersRecordData(
+                                        photoUrl: _model.uploadedFileUrl,
+                                      ));
+                                    },
                                     onLongPress: () async {
+                                      logFirebaseEvent(
+                                          'PROFILE_ProfileImage_ON_LONG_PRESS');
+                                      logFirebaseEvent(
+                                          'ProfileImage_navigate_to');
+
                                       context.pushNamed(
                                         'editProfile',
                                         queryParameters: {
@@ -146,13 +249,19 @@ class _ProfilePageWidgetState extends State<ProfilePageWidget> {
                                       );
                                     },
                                     child: Hero(
-                                      tag: currentUserPhoto,
+                                      tag: valueOrDefault<String>(
+                                        currentUserPhoto,
+                                        'https://image.shutterstock.com/image-illustration/cyberpunk-soldier-city-warfare-3d-260nw-2021856803.jpg',
+                                      ),
                                       transitionOnUserGestures: true,
                                       child: ClipRRect(
                                         borderRadius:
                                             BorderRadius.circular(50.0),
                                         child: CachedNetworkImage(
-                                          imageUrl: currentUserPhoto,
+                                          imageUrl: valueOrDefault<String>(
+                                            currentUserPhoto,
+                                            'https://image.shutterstock.com/image-illustration/cyberpunk-soldier-city-warfare-3d-260nw-2021856803.jpg',
+                                          ),
                                           width: 100.0,
                                           height: 100.0,
                                           fit: BoxFit.cover,
@@ -210,30 +319,57 @@ class _ProfilePageWidgetState extends State<ProfilePageWidget> {
               Padding(
                 padding: EdgeInsetsDirectional.fromSTEB(0.0, 16.0, 0.0, 12.0),
                 child: AuthUserStreamWidget(
-                  builder: (context) => Text(
-                    currentUserDisplayName,
-                    textAlign: TextAlign.center,
-                    style: FlutterFlowTheme.of(context).headlineSmall.override(
-                          fontFamily: 'Plus Jakarta Sans',
-                          color: Colors.white,
-                          fontSize: 22.0,
-                          fontWeight: FontWeight.bold,
-                          useGoogleFonts: GoogleFonts.asMap().containsKey(
-                              FlutterFlowTheme.of(context).headlineSmallFamily),
-                        ),
+                  builder: (context) => InkWell(
+                    splashColor: Colors.transparent,
+                    focusColor: Colors.transparent,
+                    hoverColor: Colors.transparent,
+                    highlightColor: Colors.transparent,
+                    onTap: () async {
+                      logFirebaseEvent(
+                          'PROFILE_PAGE_PAGE_Text_j7glln2k_ON_TAP');
+                      if (!(valueOrDefault(currentUserDocument?.nickname, '') !=
+                              null &&
+                          valueOrDefault(currentUserDocument?.nickname, '') !=
+                              '')) {
+                        logFirebaseEvent('Text_navigate_to');
+
+                        context.pushNamed(
+                          'editProfile',
+                          queryParameters: {
+                            'profilePage': serializeParam(
+                              '',
+                              ParamType.String,
+                            ),
+                          }.withoutNulls,
+                          extra: <String, dynamic>{
+                            kTransitionInfoKey: TransitionInfo(
+                              hasTransition: true,
+                              transitionType: PageTransitionType.bottomToTop,
+                              duration: Duration(milliseconds: 50),
+                            ),
+                          },
+                        );
+                      }
+                    },
+                    child: Text(
+                      valueOrDefault<String>(
+                        valueOrDefault(currentUserDocument?.nickname, ''),
+                        'Enter nickname',
+                      ),
+                      textAlign: TextAlign.center,
+                      style:
+                          FlutterFlowTheme.of(context).headlineSmall.override(
+                                fontFamily: 'Plus Jakarta Sans',
+                                color: Colors.white,
+                                fontSize: 22.0,
+                                fontWeight: FontWeight.bold,
+                                useGoogleFonts: GoogleFonts.asMap().containsKey(
+                                    FlutterFlowTheme.of(context)
+                                        .headlineSmallFamily),
+                              ),
+                    ),
                   ),
                 ),
-              ),
-              Text(
-                currentUserEmail,
-                style: FlutterFlowTheme.of(context).titleSmall.override(
-                      fontFamily: 'Plus Jakarta Sans',
-                      color: Color(0xCCFFFFFF),
-                      fontSize: 16.0,
-                      fontWeight: FontWeight.w500,
-                      useGoogleFonts: GoogleFonts.asMap().containsKey(
-                          FlutterFlowTheme.of(context).titleSmallFamily),
-                    ),
               ),
               Padding(
                 padding: EdgeInsetsDirectional.fromSTEB(16.0, 24.0, 16.0, 32.0),
@@ -420,84 +556,144 @@ class _ProfilePageWidgetState extends State<ProfilePageWidget> {
                                       ),
                                 ),
                               ),
-                              Padding(
-                                padding: EdgeInsetsDirectional.fromSTEB(
-                                    0.0, 0.0, 0.0, 8.0),
-                                child: Row(
-                                  mainAxisSize: MainAxisSize.max,
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  children: [
-                                    Stack(
+                              InkWell(
+                                splashColor: Colors.transparent,
+                                focusColor: Colors.transparent,
+                                hoverColor: Colors.transparent,
+                                highlightColor: Colors.transparent,
+                                onTap: () async {
+                                  logFirebaseEvent(
+                                      'PROFILE_Container_epmkti3q_ON_TAP');
+                                  logFirebaseEvent('Container_navigate_to');
+
+                                  context.pushNamed('AddPhoneNumber');
+                                },
+                                child: Container(
+                                  width: double.infinity,
+                                  height: 50.0,
+                                  decoration: BoxDecoration(),
+                                  child: Padding(
+                                    padding: EdgeInsetsDirectional.fromSTEB(
+                                        0.0, 0.0, 0.0, 8.0),
+                                    child: Row(
+                                      mainAxisSize: MainAxisSize.max,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
                                       children: [
-                                        Padding(
-                                          padding:
-                                              EdgeInsetsDirectional.fromSTEB(
-                                                  0.0, 8.0, 16.0, 8.0),
-                                          child: Icon(
-                                            Icons.work_outline,
-                                            color: Color(0xFF57636C),
-                                            size: 24.0,
-                                          ),
-                                        ),
-                                        if (currentPhoneNumber == null ||
-                                            currentPhoneNumber == '')
-                                          Padding(
-                                            padding:
-                                                EdgeInsetsDirectional.fromSTEB(
-                                                    0.0, 8.0, 16.0, 8.0),
-                                            child: AuthUserStreamWidget(
-                                              builder: (context) => Icon(
+                                        Stack(
+                                          children: [
+                                            Padding(
+                                              padding: EdgeInsetsDirectional
+                                                  .fromSTEB(
+                                                      0.0, 8.0, 16.0, 8.0),
+                                              child: Icon(
                                                 Icons.work_outline,
-                                                color:
-                                                    FlutterFlowTheme.of(context)
-                                                        .error,
+                                                color: Color(0xFF57636C),
                                                 size: 24.0,
                                               ),
                                             ),
+                                            if (currentPhoneNumber == null ||
+                                                currentPhoneNumber == '')
+                                              Padding(
+                                                padding: EdgeInsetsDirectional
+                                                    .fromSTEB(
+                                                        0.0, 8.0, 16.0, 8.0),
+                                                child: AuthUserStreamWidget(
+                                                  builder: (context) => Icon(
+                                                    Icons.work_outline,
+                                                    color: FlutterFlowTheme.of(
+                                                            context)
+                                                        .error,
+                                                    size: 24.0,
+                                                  ),
+                                                ),
+                                              ),
+                                          ],
+                                        ),
+                                        Expanded(
+                                          child: Padding(
+                                            padding:
+                                                EdgeInsetsDirectional.fromSTEB(
+                                                    0.0, 0.0, 12.0, 0.0),
+                                            child: Text(
+                                              'Phone Number',
+                                              textAlign: TextAlign.start,
+                                              style: FlutterFlowTheme.of(
+                                                      context)
+                                                  .bodyMedium
+                                                  .override(
+                                                    fontFamily:
+                                                        'Plus Jakarta Sans',
+                                                    color: Color(0xFF101213),
+                                                    fontSize: 14.0,
+                                                    fontWeight: FontWeight.w500,
+                                                    useGoogleFonts: GoogleFonts
+                                                            .asMap()
+                                                        .containsKey(
+                                                            FlutterFlowTheme.of(
+                                                                    context)
+                                                                .bodyMediumFamily),
+                                                  ),
+                                            ),
                                           ),
+                                        ),
+                                        Stack(
+                                          children: [
+                                            if (currentPhoneNumber == null ||
+                                                currentPhoneNumber == '')
+                                              AuthUserStreamWidget(
+                                                builder: (context) => Text(
+                                                  'Add Number',
+                                                  textAlign: TextAlign.center,
+                                                  style: FlutterFlowTheme.of(
+                                                          context)
+                                                      .bodyMedium
+                                                      .override(
+                                                        fontFamily:
+                                                            'Plus Jakarta Sans',
+                                                        color:
+                                                            Color(0xFF4B39EF),
+                                                        fontSize: 14.0,
+                                                        fontWeight:
+                                                            FontWeight.w500,
+                                                        useGoogleFonts: GoogleFonts
+                                                                .asMap()
+                                                            .containsKey(
+                                                                FlutterFlowTheme.of(
+                                                                        context)
+                                                                    .bodyMediumFamily),
+                                                      ),
+                                                ),
+                                              ),
+                                            if (currentPhoneNumber != null &&
+                                                currentPhoneNumber != '')
+                                              AuthUserStreamWidget(
+                                                builder: (context) => Text(
+                                                  'Verified',
+                                                  style: FlutterFlowTheme.of(
+                                                          context)
+                                                      .bodyMedium
+                                                      .override(
+                                                        fontFamily:
+                                                            FlutterFlowTheme.of(
+                                                                    context)
+                                                                .bodyMediumFamily,
+                                                        color:
+                                                            Color(0xFF4B39EF),
+                                                        useGoogleFonts: GoogleFonts
+                                                                .asMap()
+                                                            .containsKey(
+                                                                FlutterFlowTheme.of(
+                                                                        context)
+                                                                    .bodyMediumFamily),
+                                                      ),
+                                                ),
+                                              ),
+                                          ],
+                                        ),
                                       ],
                                     ),
-                                    Expanded(
-                                      child: Padding(
-                                        padding: EdgeInsetsDirectional.fromSTEB(
-                                            0.0, 0.0, 12.0, 0.0),
-                                        child: Text(
-                                          'Phone Number',
-                                          textAlign: TextAlign.start,
-                                          style: FlutterFlowTheme.of(context)
-                                              .bodyMedium
-                                              .override(
-                                                fontFamily: 'Plus Jakarta Sans',
-                                                color: Color(0xFF101213),
-                                                fontSize: 14.0,
-                                                fontWeight: FontWeight.w500,
-                                                useGoogleFonts: GoogleFonts
-                                                        .asMap()
-                                                    .containsKey(
-                                                        FlutterFlowTheme.of(
-                                                                context)
-                                                            .bodyMediumFamily),
-                                              ),
-                                        ),
-                                      ),
-                                    ),
-                                    Text(
-                                      'Add Number',
-                                      textAlign: TextAlign.center,
-                                      style: FlutterFlowTheme.of(context)
-                                          .bodyMedium
-                                          .override(
-                                            fontFamily: 'Plus Jakarta Sans',
-                                            color: Color(0xFF4B39EF),
-                                            fontSize: 14.0,
-                                            fontWeight: FontWeight.w500,
-                                            useGoogleFonts: GoogleFonts.asMap()
-                                                .containsKey(
-                                                    FlutterFlowTheme.of(context)
-                                                        .bodyMediumFamily),
-                                          ),
-                                    ),
-                                  ],
+                                  ),
                                 ),
                               ),
                               Padding(
@@ -618,96 +814,106 @@ class _ProfilePageWidgetState extends State<ProfilePageWidget> {
                                   ],
                                 ),
                               ),
-                              Padding(
-                                padding: EdgeInsetsDirectional.fromSTEB(
-                                    0.0, 0.0, 0.0, 8.0),
-                                child: Row(
-                                  mainAxisSize: MainAxisSize.max,
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  children: [
-                                    Stack(
-                                      children: [
-                                        Padding(
-                                          padding:
-                                              EdgeInsetsDirectional.fromSTEB(
-                                                  0.0, 8.0, 16.0, 8.0),
-                                          child: Icon(
-                                            Icons.edit,
-                                            color: Color(0xFF57636C),
-                                            size: 24.0,
-                                          ),
-                                        ),
-                                        if ((currentUserDisplayName == null ||
-                                                currentUserDisplayName == '') ||
-                                            (currentUserPhoto == null ||
-                                                currentUserPhoto == '') ||
-                                            (valueOrDefault(
-                                                        currentUserDocument
-                                                            ?.nickname,
-                                                        '') ==
-                                                    null ||
-                                                valueOrDefault(
-                                                        currentUserDocument
-                                                            ?.nickname,
-                                                        '') ==
-                                                    ''))
+                              Container(
+                                width: double.infinity,
+                                height: 50.0,
+                                decoration: BoxDecoration(),
+                                child: Padding(
+                                  padding: EdgeInsetsDirectional.fromSTEB(
+                                      0.0, 0.0, 0.0, 8.0),
+                                  child: Row(
+                                    mainAxisSize: MainAxisSize.max,
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    children: [
+                                      Stack(
+                                        children: [
                                           Padding(
                                             padding:
                                                 EdgeInsetsDirectional.fromSTEB(
                                                     0.0, 8.0, 16.0, 8.0),
-                                            child: AuthUserStreamWidget(
-                                              builder: (context) => Icon(
-                                                Icons.edit,
-                                                color:
-                                                    FlutterFlowTheme.of(context)
-                                                        .error,
-                                                size: 24.0,
-                                              ),
+                                            child: Icon(
+                                              Icons.edit,
+                                              color: Color(0xFF57636C),
+                                              size: 24.0,
                                             ),
                                           ),
-                                      ],
-                                    ),
-                                    Expanded(
-                                      child: Padding(
-                                        padding: EdgeInsetsDirectional.fromSTEB(
-                                            0.0, 0.0, 12.0, 0.0),
-                                        child: Text(
-                                          'Profile Settings',
-                                          textAlign: TextAlign.start,
-                                          style: FlutterFlowTheme.of(context)
-                                              .bodyMedium
-                                              .override(
-                                                fontFamily: 'Plus Jakarta Sans',
-                                                color: Color(0xFF101213),
-                                                fontSize: 14.0,
-                                                fontWeight: FontWeight.w500,
-                                                useGoogleFonts: GoogleFonts
-                                                        .asMap()
-                                                    .containsKey(
-                                                        FlutterFlowTheme.of(
-                                                                context)
-                                                            .bodyMediumFamily),
+                                          if ((currentUserDisplayName == null ||
+                                                  currentUserDisplayName ==
+                                                      '') ||
+                                              (currentUserPhoto == null ||
+                                                  currentUserPhoto == '') ||
+                                              (valueOrDefault(
+                                                          currentUserDocument
+                                                              ?.nickname,
+                                                          '') ==
+                                                      null ||
+                                                  valueOrDefault(
+                                                          currentUserDocument
+                                                              ?.nickname,
+                                                          '') ==
+                                                      ''))
+                                            Padding(
+                                              padding: EdgeInsetsDirectional
+                                                  .fromSTEB(
+                                                      0.0, 8.0, 16.0, 8.0),
+                                              child: AuthUserStreamWidget(
+                                                builder: (context) => Icon(
+                                                  Icons.edit,
+                                                  color: FlutterFlowTheme.of(
+                                                          context)
+                                                      .error,
+                                                  size: 24.0,
+                                                ),
                                               ),
+                                            ),
+                                        ],
+                                      ),
+                                      Expanded(
+                                        child: Padding(
+                                          padding:
+                                              EdgeInsetsDirectional.fromSTEB(
+                                                  0.0, 0.0, 12.0, 0.0),
+                                          child: Text(
+                                            'Profile Settings',
+                                            textAlign: TextAlign.start,
+                                            style: FlutterFlowTheme.of(context)
+                                                .bodyMedium
+                                                .override(
+                                                  fontFamily:
+                                                      'Plus Jakarta Sans',
+                                                  color: Color(0xFF101213),
+                                                  fontSize: 14.0,
+                                                  fontWeight: FontWeight.w500,
+                                                  useGoogleFonts: GoogleFonts
+                                                          .asMap()
+                                                      .containsKey(
+                                                          FlutterFlowTheme.of(
+                                                                  context)
+                                                              .bodyMediumFamily),
+                                                ),
+                                          ),
                                         ),
                                       ),
-                                    ),
-                                    Text(
-                                      'Edit Profile',
-                                      textAlign: TextAlign.center,
-                                      style: FlutterFlowTheme.of(context)
-                                          .bodyMedium
-                                          .override(
-                                            fontFamily: 'Plus Jakarta Sans',
-                                            color: Color(0xFF4B39EF),
-                                            fontSize: 14.0,
-                                            fontWeight: FontWeight.w500,
-                                            useGoogleFonts: GoogleFonts.asMap()
-                                                .containsKey(
-                                                    FlutterFlowTheme.of(context)
-                                                        .bodyMediumFamily),
-                                          ),
-                                    ),
-                                  ],
+                                      Text(
+                                        'Edit Profile',
+                                        textAlign: TextAlign.center,
+                                        style: FlutterFlowTheme.of(context)
+                                            .bodyMedium
+                                            .override(
+                                              fontFamily: 'Plus Jakarta Sans',
+                                              color: Color(0xFF4B39EF),
+                                              fontSize: 14.0,
+                                              fontWeight: FontWeight.w500,
+                                              useGoogleFonts: GoogleFonts
+                                                      .asMap()
+                                                  .containsKey(
+                                                      FlutterFlowTheme.of(
+                                                              context)
+                                                          .bodyMediumFamily),
+                                            ),
+                                      ),
+                                    ],
+                                  ),
                                 ),
                               ),
                               Padding(
@@ -767,6 +973,9 @@ class _ProfilePageWidgetState extends State<ProfilePageWidget> {
                                   hoverColor: Colors.transparent,
                                   highlightColor: Colors.transparent,
                                   onTap: () async {
+                                    logFirebaseEvent(
+                                        'PROFILE_PAGE_PAGE_Row_qu2wqnbp_ON_TAP');
+                                    logFirebaseEvent('Row_auth');
                                     GoRouter.of(context).prepareAuthEvent();
                                     await authManager.signOut();
                                     GoRouter.of(context)
@@ -789,6 +998,9 @@ class _ProfilePageWidgetState extends State<ProfilePageWidget> {
                                           hoverColor: Colors.transparent,
                                           highlightColor: Colors.transparent,
                                           onTap: () async {
+                                            logFirebaseEvent(
+                                                'PROFILE_PAGE_PAGE_Icon_dx1p4vqk_ON_TAP');
+                                            logFirebaseEvent('Icon_auth');
                                             GoRouter.of(context)
                                                 .prepareAuthEvent();
                                             await authManager.signOut();

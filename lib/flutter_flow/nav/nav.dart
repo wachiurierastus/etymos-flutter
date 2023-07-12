@@ -77,13 +77,13 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) => GoRouter(
       debugLogDiagnostics: true,
       refreshListenable: appStateNotifier,
       errorBuilder: (context, state) =>
-          appStateNotifier.loggedIn ? ProfilePageWidget() : LandingPageWidget(),
+          appStateNotifier.loggedIn ? HomePageWidget() : LandingPageWidget(),
       routes: [
         FFRoute(
           name: '_initialize',
           path: '/',
           builder: (context, _) => appStateNotifier.loggedIn
-              ? ProfilePageWidget()
+              ? HomePageWidget()
               : LandingPageWidget(),
         ),
         FFRoute(
@@ -100,13 +100,11 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) => GoRouter(
         FFRoute(
           name: 'loginOrRegister',
           path: '/loginOrRegister',
-          requireAuth: true,
           builder: (context, params) => LoginOrRegisterWidget(),
         ),
         FFRoute(
           name: 'createAccount',
           path: '/createAccount',
-          requireAuth: true,
           builder: (context, params) => CreateAccountWidget(),
         ),
         FFRoute(
@@ -118,7 +116,6 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) => GoRouter(
         FFRoute(
           name: 'editProfile',
           path: '/editProfile',
-          requireAuth: true,
           builder: (context, params) => EditProfileWidget(
             profilePage: params.getParam('profilePage', ParamType.String),
           ),
@@ -130,10 +127,22 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) => GoRouter(
           builder: (context, params) => HomePageWidget(),
         ),
         FFRoute(
-          name: 'UserMessages',
-          path: '/userMessages',
+          name: 'AddPhoneNumber',
+          path: '/addPhoneNumber',
+          builder: (context, params) => AddPhoneNumberWidget(
+            phoneNumber: params.getParam('phoneNumber', ParamType.String),
+          ),
+        ),
+        FFRoute(
+          name: 'AuthSMSCode',
+          path: '/authSMSCode',
+          builder: (context, params) => AuthSMSCodeWidget(),
+        ),
+        FFRoute(
+          name: 'SlidePuzzle',
+          path: '/slidePuzzle',
           requireAuth: true,
-          builder: (context, params) => UserMessagesWidget(),
+          builder: (context, params) => SlidePuzzleWidget(),
         )
       ].map((r) => r.toRoute(appStateNotifier)).toList(),
     );

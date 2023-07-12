@@ -18,39 +18,39 @@ class LoginOrRegisterModel extends FlutterFlowModel {
   final unfocusNode = FocusNode();
   final formKey = GlobalKey<FormState>();
   // State field(s) for emailAddress widget.
-  TextEditingController? emailAddressController1;
-  String? Function(BuildContext, String?)? emailAddressController1Validator;
+  TextEditingController? emailAddressController;
+  String? Function(BuildContext, String?)? emailAddressControllerValidator;
   // State field(s) for password widget.
-  TextEditingController? passwordController1;
-  late bool passwordVisibility1;
-  String? Function(BuildContext, String?)? passwordController1Validator;
+  TextEditingController? passwordController;
+  late bool passwordVisibility;
+  String? Function(BuildContext, String?)? passwordControllerValidator;
   // State field(s) for confirmpassword widget.
   TextEditingController? confirmpasswordController;
   late bool confirmpasswordVisibility;
   String? Function(BuildContext, String?)? confirmpasswordControllerValidator;
-  // State field(s) for emailAddress widget.
-  TextEditingController? emailAddressController2;
-  String? Function(BuildContext, String?)? emailAddressController2Validator;
-  // State field(s) for password widget.
-  TextEditingController? passwordController2;
-  late bool passwordVisibility2;
-  String? Function(BuildContext, String?)? passwordController2Validator;
+  // State field(s) for emailAddressLogin widget.
+  TextEditingController? emailAddressLoginController;
+  String? Function(BuildContext, String?)? emailAddressLoginControllerValidator;
+  // State field(s) for passwordLogin widget.
+  TextEditingController? passwordLoginController;
+  late bool passwordLoginVisibility;
+  String? Function(BuildContext, String?)? passwordLoginControllerValidator;
 
   /// Initialization and disposal methods.
 
   void initState(BuildContext context) {
-    passwordVisibility1 = false;
+    passwordVisibility = false;
     confirmpasswordVisibility = false;
-    passwordVisibility2 = false;
+    passwordLoginVisibility = false;
   }
 
   void dispose() {
     unfocusNode.dispose();
-    emailAddressController1?.dispose();
-    passwordController1?.dispose();
+    emailAddressController?.dispose();
+    passwordController?.dispose();
     confirmpasswordController?.dispose();
-    emailAddressController2?.dispose();
-    passwordController2?.dispose();
+    emailAddressLoginController?.dispose();
+    passwordLoginController?.dispose();
   }
 
   /// Action blocks are added here.

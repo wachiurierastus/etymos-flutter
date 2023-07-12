@@ -24,6 +24,43 @@ class FFAppState extends ChangeNotifier {
   set ttTelephoneNumber(String _value) {
     _ttTelephoneNumber = _value;
   }
+
+  int _moves = 0;
+  int get moves => _moves;
+  set moves(int _value) {
+    _moves = _value;
+  }
+
+  bool _isStarted = false;
+  bool get isStarted => _isStarted;
+  set isStarted(bool _value) {
+    _isStarted = _value;
+  }
+
+  List<String> _boardLetters = [];
+  List<String> get boardLetters => _boardLetters;
+  set boardLetters(List<String> _value) {
+    _boardLetters = _value;
+  }
+
+  void addToBoardLetters(String _value) {
+    _boardLetters.add(_value);
+  }
+
+  void removeFromBoardLetters(String _value) {
+    _boardLetters.remove(_value);
+  }
+
+  void removeAtIndexFromBoardLetters(int _index) {
+    _boardLetters.removeAt(_index);
+  }
+
+  void updateBoardLettersAtIndex(
+    int _index,
+    String Function(String) updateFn,
+  ) {
+    _boardLetters[_index] = updateFn(_boardLetters[_index]);
+  }
 }
 
 LatLng? _latLngFromString(String? val) {

@@ -372,6 +372,7 @@ class _LandingPageWidgetState extends State<LandingPageWidget>
     super.initState();
     _model = createModel(context, () => LandingPageModel());
 
+    logFirebaseEvent('screen_view', parameters: {'screen_name': 'landingPage'});
     setupAnimations(
       animationsMap.values.where((anim) =>
           anim.trigger == AnimationTrigger.onActionTrigger ||
@@ -410,9 +411,9 @@ class _LandingPageWidgetState extends State<LandingPageWidget>
                     mainAxisSize: MainAxisSize.max,
                     children: [
                       Image.network(
-                        'https://static.nike.com/a/images/f_auto,b_rgb:f5f5f5,w_880/b74f8933-b681-499a-91f5-d74aee3389bb/sportswear-womens-oversized-fleece-hoodie-qVwpDl.png',
+                        'https://th.bing.com/th/id/R.1d5a38c9edd2559141b750dacb9c4ace?rik=vZaAsrSvy0NI%2fw&riu=http%3a%2f%2fwww.photos-public-domain.com%2fwp-content%2fuploads%2f2011%2f09%2fwords.jpg&ehk=BuyGB6UudA77epy0lm9Tnw7pRuq3EUpuzSS0sUauIGg%3d&risl=&pid=ImgRaw&r=0',
                         width: double.infinity,
-                        height: 500.0,
+                        height: 400.0,
                         fit: BoxFit.cover,
                       ).animateOnPageLoad(
                           animationsMap['imageOnPageLoadAnimation1']!),
@@ -424,7 +425,7 @@ class _LandingPageWidgetState extends State<LandingPageWidget>
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              'Spring Specials 2022',
+                              'Power up your wordpower',
                               style: FlutterFlowTheme.of(context)
                                   .headlineMedium
                                   .override(
@@ -443,7 +444,7 @@ class _LandingPageWidgetState extends State<LandingPageWidget>
                               padding: EdgeInsetsDirectional.fromSTEB(
                                   0.0, 12.0, 0.0, 0.0),
                               child: Text(
-                                'Pay attention to our new athlesiure line, it is located in our main section and we have sales!',
+                                'Take your wordpower to the next level with our culturally contextualized practice sets',
                                 style: FlutterFlowTheme.of(context)
                                     .labelMedium
                                     .override(
@@ -477,6 +478,9 @@ class _LandingPageWidgetState extends State<LandingPageWidget>
                                       size: 30.0,
                                     ),
                                     onPressed: () async {
+                                      logFirebaseEvent(
+                                          'LANDING_navigate_next_rounded_ICN_ON_TAP');
+                                      logFirebaseEvent('IconButton_page_view');
                                       await _model.pageViewController?.nextPage(
                                         duration: Duration(milliseconds: 300),
                                         curve: Curves.ease,
@@ -496,7 +500,7 @@ class _LandingPageWidgetState extends State<LandingPageWidget>
                     mainAxisSize: MainAxisSize.max,
                     children: [
                       Image.network(
-                        'https://static.nike.com/a/images/f_auto,b_rgb:f5f5f5,w_880/f5be788a-4531-450e-9954-603e10d75daf/epic-luxe-womens-mid-rise-trail-running-leggings-N5wX3G.png',
+                        'https://th.bing.com/th/id/OIP.WWjP2m_qeD_sxeNQinXMiQHaEn?pid=ImgDet&rs=1',
                         width: double.infinity,
                         height: 500.0,
                         fit: BoxFit.cover,
@@ -510,7 +514,7 @@ class _LandingPageWidgetState extends State<LandingPageWidget>
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              'Puuuurfect Running Gear',
+                              'We are One',
                               style: FlutterFlowTheme.of(context)
                                   .headlineMedium
                                   .override(
@@ -529,7 +533,7 @@ class _LandingPageWidgetState extends State<LandingPageWidget>
                               padding: EdgeInsetsDirectional.fromSTEB(
                                   0.0, 12.0, 0.0, 0.0),
                               child: Text(
-                                'Pay attention to our new athlesiure line, it is located in our main section and we have sales!',
+                                'Appreciate where you come from and who others are',
                                 style: FlutterFlowTheme.of(context)
                                     .labelMedium
                                     .override(
@@ -563,6 +567,9 @@ class _LandingPageWidgetState extends State<LandingPageWidget>
                                       size: 30.0,
                                     ),
                                     onPressed: () async {
+                                      logFirebaseEvent(
+                                          'LANDING_navigate_next_rounded_ICN_ON_TAP');
+                                      logFirebaseEvent('IconButton_page_view');
                                       await _model.pageViewController?.nextPage(
                                         duration: Duration(milliseconds: 300),
                                         curve: Curves.ease,
@@ -582,7 +589,7 @@ class _LandingPageWidgetState extends State<LandingPageWidget>
                     mainAxisSize: MainAxisSize.max,
                     children: [
                       Image.network(
-                        'https://static.nike.com/a/images/f_auto,b_rgb:f5f5f5,w_880/9d1e8941-ec91-490f-b1ac-db44a0068a82/quest-4-womens-road-running-shoes-LM6nH6.png',
+                        'https://th.bing.com/th/id/R.be471c8ccc6097953d950c3236e8b1e0?rik=P%2bti2Fhxfn1CIA&riu=http%3a%2f%2ffc04.deviantart.net%2ffs70%2fi%2f2012%2f175%2ff%2ff%2ftournament_leaderboard_by_lookatvoid-d54o2na.jpg&ehk=0A8R2%2bCTF5vJjejPzXezJ%2f5LIVS%2bBLyybBMfgyDDRL0%3d&risl=&pid=ImgRaw&r=0',
                         width: double.infinity,
                         height: 500.0,
                         fit: BoxFit.cover,
@@ -596,7 +603,7 @@ class _LandingPageWidgetState extends State<LandingPageWidget>
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              'The right pair of shoes',
+                              'Challenge friends ',
                               style: FlutterFlowTheme.of(context)
                                   .headlineMedium
                                   .override(
@@ -615,7 +622,7 @@ class _LandingPageWidgetState extends State<LandingPageWidget>
                               padding: EdgeInsetsDirectional.fromSTEB(
                                   0.0, 12.0, 0.0, 0.0),
                               child: Text(
-                                'The pursuit of speed continues with the Nike Quest 4 Premium. Take on the streets with higher foam heights and cushioned comfort that combine with a lightweight upper to offer secure support.',
+                                'Play against your friends in different weekly challenges',
                                 style: FlutterFlowTheme.of(context)
                                     .labelMedium
                                     .override(
@@ -649,6 +656,9 @@ class _LandingPageWidgetState extends State<LandingPageWidget>
                                       size: 30.0,
                                     ),
                                     onPressed: () async {
+                                      logFirebaseEvent(
+                                          'LANDING_navigate_next_rounded_ICN_ON_TAP');
+                                      logFirebaseEvent('IconButton_page_view');
                                       await _model.pageViewController?.nextPage(
                                         duration: Duration(milliseconds: 300),
                                         curve: Curves.ease,
@@ -696,7 +706,7 @@ class _LandingPageWidgetState extends State<LandingPageWidget>
                                 padding: EdgeInsetsDirectional.fromSTEB(
                                     0.0, 0.0, 0.0, 44.0),
                                 child: Image.network(
-                                  'https://storage.googleapis.com/flutterflow-io-6f20.appspot.com/projects/templates-2-ktmgjv/assets/4lve2p8qsetr/@3xlogoMark_outlinePrimary_transparent.png',
+                                  'https://www.canva.com/design/DAFoXkesiLY/-y1E5l2sLjP1GxORSrNE9w/edit?utm_content=DAFoXkesiLY&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton',
                                   width: 200.0,
                                   height: 170.0,
                                   fit: BoxFit.fitWidth,
@@ -704,7 +714,7 @@ class _LandingPageWidgetState extends State<LandingPageWidget>
                                     'imageOnPageLoadAnimation4']!),
                               ),
                               Text(
-                                'Your Journey Begins',
+                                'Turathi is your home',
                                 style: FlutterFlowTheme.of(context)
                                     .headlineMedium
                                     .override(
@@ -744,6 +754,10 @@ class _LandingPageWidgetState extends State<LandingPageWidget>
                                     0.0, 44.0, 0.0, 0.0),
                                 child: FFButtonWidget(
                                   onPressed: () async {
+                                    logFirebaseEvent(
+                                        'LANDING_PAGE_PAGE_GET_STARTED_BTN_ON_TAP');
+                                    logFirebaseEvent('Button_navigate_to');
+
                                     context.pushNamed('loginOrRegister');
                                   },
                                   text: 'Get Started',
@@ -754,7 +768,7 @@ class _LandingPageWidgetState extends State<LandingPageWidget>
                                         0.0, 0.0, 0.0, 0.0),
                                     iconPadding: EdgeInsetsDirectional.fromSTEB(
                                         0.0, 0.0, 0.0, 0.0),
-                                    color: Color(0xFF4B39EF),
+                                    color: Color(0xFF22282F),
                                     textStyle: FlutterFlowTheme.of(context)
                                         .titleSmall
                                         .override(

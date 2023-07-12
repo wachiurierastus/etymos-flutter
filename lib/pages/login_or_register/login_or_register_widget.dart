@@ -102,11 +102,13 @@ class _LoginOrRegisterWidgetState extends State<LoginOrRegisterWidget>
     super.initState();
     _model = createModel(context, () => LoginOrRegisterModel());
 
-    _model.emailAddressController1 ??= TextEditingController();
-    _model.passwordController1 ??= TextEditingController();
+    logFirebaseEvent('screen_view',
+        parameters: {'screen_name': 'loginOrRegister'});
+    _model.emailAddressController ??= TextEditingController();
+    _model.passwordController ??= TextEditingController();
     _model.confirmpasswordController ??= TextEditingController();
-    _model.emailAddressController2 ??= TextEditingController();
-    _model.passwordController2 ??= TextEditingController();
+    _model.emailAddressLoginController ??= TextEditingController();
+    _model.passwordLoginController ??= TextEditingController();
   }
 
   @override
@@ -143,7 +145,7 @@ class _LoginOrRegisterWidgetState extends State<LoginOrRegisterWidget>
                     padding:
                         EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 72.0),
                     child: Text(
-                      'Etymos',
+                      'Turathi',
                       style: FlutterFlowTheme.of(context).displaySmall,
                     ),
                   ),
@@ -304,11 +306,11 @@ class _LoginOrRegisterWidgetState extends State<LoginOrRegisterWidget>
                                                               child:
                                                                   TextFormField(
                                                                 controller: _model
-                                                                    .emailAddressController1,
+                                                                    .emailAddressController,
                                                                 onChanged: (_) =>
                                                                     EasyDebounce
                                                                         .debounce(
-                                                                  '_model.emailAddressController1',
+                                                                  '_model.emailAddressController',
                                                                   Duration(
                                                                       milliseconds:
                                                                           100),
@@ -423,16 +425,16 @@ class _LoginOrRegisterWidgetState extends State<LoginOrRegisterWidget>
                                                                     TextInputType
                                                                         .emailAddress,
                                                                 validator: _model
-                                                                    .emailAddressController1Validator
+                                                                    .emailAddressControllerValidator
                                                                     .asValidator(
                                                                         context),
                                                               ),
                                                             ),
                                                           ),
-                                                          if (_model.emailAddressController1
+                                                          if (_model.emailAddressController
                                                                       .text !=
                                                                   null &&
-                                                              _model.emailAddressController1
+                                                              _model.emailAddressController
                                                                       .text !=
                                                                   '')
                                                             Padding(
@@ -449,11 +451,11 @@ class _LoginOrRegisterWidgetState extends State<LoginOrRegisterWidget>
                                                                 child:
                                                                     TextFormField(
                                                                   controller: _model
-                                                                      .passwordController1,
+                                                                      .passwordController,
                                                                   onChanged: (_) =>
                                                                       EasyDebounce
                                                                           .debounce(
-                                                                    '_model.passwordController1',
+                                                                    '_model.passwordController',
                                                                     Duration(
                                                                         milliseconds:
                                                                             100),
@@ -468,7 +470,7 @@ class _LoginOrRegisterWidgetState extends State<LoginOrRegisterWidget>
                                                                   ],
                                                                   obscureText:
                                                                       !_model
-                                                                          .passwordVisibility1,
+                                                                          .passwordVisibility,
                                                                   decoration:
                                                                       InputDecoration(
                                                                     labelText:
@@ -551,15 +553,15 @@ class _LoginOrRegisterWidgetState extends State<LoginOrRegisterWidget>
                                                                         InkWell(
                                                                       onTap: () =>
                                                                           setState(
-                                                                        () => _model.passwordVisibility1 =
-                                                                            !_model.passwordVisibility1,
+                                                                        () => _model.passwordVisibility =
+                                                                            !_model.passwordVisibility,
                                                                       ),
                                                                       focusNode:
                                                                           FocusNode(
                                                                               skipTraversal: true),
                                                                       child:
                                                                           Icon(
-                                                                        _model.passwordVisibility1
+                                                                        _model.passwordVisibility
                                                                             ? Icons.visibility_outlined
                                                                             : Icons.visibility_off_outlined,
                                                                         color: FlutterFlowTheme.of(context)
@@ -581,16 +583,16 @@ class _LoginOrRegisterWidgetState extends State<LoginOrRegisterWidget>
                                                                             GoogleFonts.asMap().containsKey(FlutterFlowTheme.of(context).titleMediumFamily),
                                                                       ),
                                                                   validator: _model
-                                                                      .passwordController1Validator
+                                                                      .passwordControllerValidator
                                                                       .asValidator(
                                                                           context),
                                                                 ),
                                                               ),
                                                             ),
-                                                          if (_model.passwordController1
+                                                          if (_model.passwordController
                                                                       .text !=
                                                                   null &&
-                                                              _model.passwordController1
+                                                              _model.passwordController
                                                                       .text !=
                                                                   '')
                                                             Padding(
@@ -767,7 +769,7 @@ class _LoginOrRegisterWidgetState extends State<LoginOrRegisterWidget>
                                                                     SelectionArea(
                                                                         child:
                                                                             Text(
-                                                                  _model.passwordController1
+                                                                  _model.passwordController
                                                                               .text !=
                                                                           _model
                                                                               .confirmpasswordController
@@ -795,11 +797,11 @@ class _LoginOrRegisterWidgetState extends State<LoginOrRegisterWidget>
                                                       mainAxisSize:
                                                           MainAxisSize.max,
                                                       children: [
-                                                        if ((_model.emailAddressController1.text != null && _model.emailAddressController1.text != '') ||
-                                                            (_model.passwordController1
+                                                        if ((_model.emailAddressController.text != null && _model.emailAddressController.text != '') ||
+                                                            (_model.passwordController
                                                                         .text !=
                                                                     null &&
-                                                                _model.passwordController1
+                                                                _model.passwordController
                                                                         .text !=
                                                                     '') ||
                                                             (_model.confirmpasswordController
@@ -823,21 +825,27 @@ class _LoginOrRegisterWidgetState extends State<LoginOrRegisterWidget>
                                                               child:
                                                                   FFButtonWidget(
                                                                 onPressed: _model
-                                                                            .passwordController1
+                                                                            .passwordController
                                                                             .text !=
                                                                         _model
                                                                             .confirmpasswordController
                                                                             .text
                                                                     ? null
                                                                     : () async {
+                                                                        logFirebaseEvent(
+                                                                            'LOGIN_OR_REGISTER_GET_STARTED_BTN_ON_TAP');
+                                                                        logFirebaseEvent(
+                                                                            'Button_validate_form');
                                                                         if (_model.formKey.currentState ==
                                                                                 null ||
                                                                             !_model.formKey.currentState!.validate()) {
                                                                           return;
                                                                         }
+                                                                        logFirebaseEvent(
+                                                                            'Button_auth');
                                                                         GoRouter.of(context)
                                                                             .prepareAuthEvent();
-                                                                        if (_model.passwordController1.text !=
+                                                                        if (_model.passwordController.text !=
                                                                             _model.confirmpasswordController.text) {
                                                                           ScaffoldMessenger.of(context)
                                                                               .showSnackBar(
@@ -854,10 +862,10 @@ class _LoginOrRegisterWidgetState extends State<LoginOrRegisterWidget>
                                                                             await authManager.createAccountWithEmail(
                                                                           context,
                                                                           _model
-                                                                              .emailAddressController1
+                                                                              .emailAddressController
                                                                               .text,
                                                                           _model
-                                                                              .passwordController1
+                                                                              .passwordController
                                                                               .text,
                                                                         );
                                                                         if (user ==
@@ -872,6 +880,8 @@ class _LoginOrRegisterWidgetState extends State<LoginOrRegisterWidget>
                                                                               email: '',
                                                                             ));
 
+                                                                        logFirebaseEvent(
+                                                                            'Button_show_snack_bar');
                                                                         ScaffoldMessenger.of(context)
                                                                             .clearSnackBars();
                                                                         ScaffoldMessenger.of(context)
@@ -892,7 +902,7 @@ class _LoginOrRegisterWidgetState extends State<LoginOrRegisterWidget>
                                                                         );
 
                                                                         context.goNamedAuth(
-                                                                            'profilePage',
+                                                                            'HomePage',
                                                                             context.mounted);
                                                                       },
                                                                 text:
@@ -1017,6 +1027,10 @@ class _LoginOrRegisterWidgetState extends State<LoginOrRegisterWidget>
                                                                       FFButtonWidget(
                                                                     onPressed:
                                                                         () async {
+                                                                      logFirebaseEvent(
+                                                                          'LOGIN_OR_REGISTER_CONTINUE_WITH_GOOGLE_B');
+                                                                      logFirebaseEvent(
+                                                                          'Button_auth');
                                                                       GoRouter.of(
                                                                               context)
                                                                           .prepareAuthEvent();
@@ -1029,7 +1043,7 @@ class _LoginOrRegisterWidgetState extends State<LoginOrRegisterWidget>
                                                                       }
 
                                                                       context.goNamedAuth(
-                                                                          'profilePage',
+                                                                          'HomePage',
                                                                           context
                                                                               .mounted);
                                                                     },
@@ -1170,7 +1184,7 @@ class _LoginOrRegisterWidgetState extends State<LoginOrRegisterWidget>
                                                         width: double.infinity,
                                                         child: TextFormField(
                                                           controller: _model
-                                                              .emailAddressController2,
+                                                              .emailAddressLoginController,
                                                           autofocus: true,
                                                           autofillHints: [
                                                             AutofillHints.email
@@ -1258,7 +1272,7 @@ class _LoginOrRegisterWidgetState extends State<LoginOrRegisterWidget>
                                                               TextInputType
                                                                   .emailAddress,
                                                           validator: _model
-                                                              .emailAddressController2Validator
+                                                              .emailAddressLoginControllerValidator
                                                               .asValidator(
                                                                   context),
                                                         ),
@@ -1276,14 +1290,43 @@ class _LoginOrRegisterWidgetState extends State<LoginOrRegisterWidget>
                                                         width: double.infinity,
                                                         child: TextFormField(
                                                           controller: _model
-                                                              .passwordController2,
+                                                              .passwordLoginController,
+                                                          onFieldSubmitted:
+                                                              (_) async {
+                                                            logFirebaseEvent(
+                                                                'LOGIN_OR_REGISTER_passwordLogin_ON_TEXTF');
+                                                            logFirebaseEvent(
+                                                                'passwordLogin_auth');
+                                                            GoRouter.of(context)
+                                                                .prepareAuthEvent();
+
+                                                            final user =
+                                                                await authManager
+                                                                    .signInWithEmail(
+                                                              context,
+                                                              _model
+                                                                  .emailAddressController
+                                                                  .text,
+                                                              _model
+                                                                  .passwordController
+                                                                  .text,
+                                                            );
+                                                            if (user == null) {
+                                                              return;
+                                                            }
+
+                                                            context.goNamedAuth(
+                                                                'HomePage',
+                                                                context
+                                                                    .mounted);
+                                                          },
                                                           autofocus: true,
                                                           autofillHints: [
                                                             AutofillHints
                                                                 .password
                                                           ],
                                                           obscureText: !_model
-                                                              .passwordVisibility2,
+                                                              .passwordLoginVisibility,
                                                           decoration:
                                                               InputDecoration(
                                                             labelText:
@@ -1363,15 +1406,15 @@ class _LoginOrRegisterWidgetState extends State<LoginOrRegisterWidget>
                                                               onTap: () =>
                                                                   setState(
                                                                 () => _model
-                                                                        .passwordVisibility2 =
+                                                                        .passwordLoginVisibility =
                                                                     !_model
-                                                                        .passwordVisibility2,
+                                                                        .passwordLoginVisibility,
                                                               ),
                                                               focusNode: FocusNode(
                                                                   skipTraversal:
                                                                       true),
                                                               child: Icon(
-                                                                _model.passwordVisibility2
+                                                                _model.passwordLoginVisibility
                                                                     ? Icons
                                                                         .visibility_outlined
                                                                     : Icons
@@ -1387,7 +1430,7 @@ class _LoginOrRegisterWidgetState extends State<LoginOrRegisterWidget>
                                                                   .of(context)
                                                               .bodyLarge,
                                                           validator: _model
-                                                              .passwordController2Validator
+                                                              .passwordLoginControllerValidator
                                                               .asValidator(
                                                                   context),
                                                         ),
@@ -1407,6 +1450,10 @@ class _LoginOrRegisterWidgetState extends State<LoginOrRegisterWidget>
                                                                     16.0),
                                                         child: FFButtonWidget(
                                                           onPressed: () async {
+                                                            logFirebaseEvent(
+                                                                'LOGIN_OR_REGISTER_SIGN_IN_BTN_ON_TAP');
+                                                            logFirebaseEvent(
+                                                                'Button_auth');
                                                             GoRouter.of(context)
                                                                 .prepareAuthEvent();
 
@@ -1415,10 +1462,10 @@ class _LoginOrRegisterWidgetState extends State<LoginOrRegisterWidget>
                                                                     .signInWithEmail(
                                                               context,
                                                               _model
-                                                                  .emailAddressController2
+                                                                  .emailAddressLoginController
                                                                   .text,
                                                               _model
-                                                                  .passwordController2
+                                                                  .passwordLoginController
                                                                   .text,
                                                             );
                                                             if (user == null) {
@@ -1426,7 +1473,7 @@ class _LoginOrRegisterWidgetState extends State<LoginOrRegisterWidget>
                                                             }
 
                                                             context.goNamedAuth(
-                                                                'profilePage',
+                                                                'HomePage',
                                                                 context
                                                                     .mounted);
                                                           },
@@ -1538,6 +1585,10 @@ class _LoginOrRegisterWidgetState extends State<LoginOrRegisterWidget>
                                                                 FFButtonWidget(
                                                               onPressed:
                                                                   () async {
+                                                                logFirebaseEvent(
+                                                                    'LOGIN_OR_REGISTER_CONTINUE_WITH_GOOGLE_B');
+                                                                logFirebaseEvent(
+                                                                    'Button_auth');
                                                                 GoRouter.of(
                                                                         context)
                                                                     .prepareAuthEvent();
@@ -1551,7 +1602,7 @@ class _LoginOrRegisterWidgetState extends State<LoginOrRegisterWidget>
                                                                 }
 
                                                                 context.goNamedAuth(
-                                                                    'profilePage',
+                                                                    'HomePage',
                                                                     context
                                                                         .mounted);
                                                               },
@@ -1633,6 +1684,11 @@ class _LoginOrRegisterWidgetState extends State<LoginOrRegisterWidget>
                                                                     16.0),
                                                         child: FFButtonWidget(
                                                           onPressed: () async {
+                                                            logFirebaseEvent(
+                                                                'LOGIN_OR_REGISTER_FORGOT_PASSWORD?_BTN_O');
+                                                            logFirebaseEvent(
+                                                                'Button_navigate_to');
+
                                                             context.pushNamed(
                                                                 'forgotPassword');
                                                           },

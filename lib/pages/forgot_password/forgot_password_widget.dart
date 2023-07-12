@@ -26,6 +26,8 @@ class _ForgotPasswordWidgetState extends State<ForgotPasswordWidget> {
     super.initState();
     _model = createModel(context, () => ForgotPasswordModel());
 
+    logFirebaseEvent('screen_view',
+        parameters: {'screen_name': 'forgotPassword'});
     _model.emailAddressController ??= TextEditingController();
   }
 
@@ -79,6 +81,9 @@ class _ForgotPasswordWidgetState extends State<ForgotPasswordWidget> {
                               size: 24.0,
                             ),
                             onPressed: () async {
+                              logFirebaseEvent(
+                                  'FORGOT_PASSWORD_arrow_back_rounded_ICN_O');
+                              logFirebaseEvent('IconButton_navigate_back');
                               context.pop();
                             },
                           ),
@@ -229,6 +234,9 @@ class _ForgotPasswordWidgetState extends State<ForgotPasswordWidget> {
                             _model.emailAddressController.text == ''
                         ? null
                         : () async {
+                            logFirebaseEvent(
+                                'FORGOT_PASSWORD_PAGE_Button-Login_ON_TAP');
+                            logFirebaseEvent('Button-Login_auth');
                             if (_model.emailAddressController.text.isEmpty) {
                               ScaffoldMessenger.of(context).showSnackBar(
                                 SnackBar(
@@ -243,6 +251,7 @@ class _ForgotPasswordWidgetState extends State<ForgotPasswordWidget> {
                               email: _model.emailAddressController.text,
                               context: context,
                             );
+                            logFirebaseEvent('Button-Login_navigate_to');
 
                             context.pushNamed(
                               'loginOrRegister',

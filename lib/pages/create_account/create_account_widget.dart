@@ -27,6 +27,8 @@ class _CreateAccountWidgetState extends State<CreateAccountWidget> {
     super.initState();
     _model = createModel(context, () => CreateAccountModel());
 
+    logFirebaseEvent('screen_view',
+        parameters: {'screen_name': 'createAccount'});
     _model.emailAddressController ??= TextEditingController();
     _model.passwordController ??= TextEditingController();
     _model.confirmPasswordController ??= TextEditingController();
@@ -75,6 +77,9 @@ class _CreateAccountWidgetState extends State<CreateAccountWidget> {
                           size: 24.0,
                         ),
                         onPressed: () async {
+                          logFirebaseEvent(
+                              'CREATE_ACCOUNT_arrow_back_rounded_ICN_ON');
+                          logFirebaseEvent('IconButton_navigate_back');
                           context.pop();
                         },
                       ),
@@ -387,6 +392,8 @@ class _CreateAccountWidgetState extends State<CreateAccountWidget> {
             padding: EdgeInsetsDirectional.fromSTEB(0.0, 24.0, 0.0, 0.0),
             child: FFButtonWidget(
               onPressed: () async {
+                logFirebaseEvent('CREATE_ACCOUNT_PAGE_Button-Login_ON_TAP');
+                logFirebaseEvent('Button-Login_auth');
                 GoRouter.of(context).prepareAuthEvent();
                 if (_model.passwordController.text !=
                     _model.confirmPasswordController.text) {
@@ -415,7 +422,7 @@ class _CreateAccountWidgetState extends State<CreateAccountWidget> {
                       email: '',
                     ));
 
-                context.goNamedAuth('profilePage', context.mounted);
+                context.goNamedAuth('HomePage', context.mounted);
               },
               text: 'Create Account',
               options: FFButtonOptions(
