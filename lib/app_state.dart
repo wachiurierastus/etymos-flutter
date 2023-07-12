@@ -61,6 +61,31 @@ class FFAppState extends ChangeNotifier {
   ) {
     _boardLetters[_index] = updateFn(_boardLetters[_index]);
   }
+
+  List<int> _boardNumbers = [];
+  List<int> get boardNumbers => _boardNumbers;
+  set boardNumbers(List<int> _value) {
+    _boardNumbers = _value;
+  }
+
+  void addToBoardNumbers(int _value) {
+    _boardNumbers.add(_value);
+  }
+
+  void removeFromBoardNumbers(int _value) {
+    _boardNumbers.remove(_value);
+  }
+
+  void removeAtIndexFromBoardNumbers(int _index) {
+    _boardNumbers.removeAt(_index);
+  }
+
+  void updateBoardNumbersAtIndex(
+    int _index,
+    int Function(int) updateFn,
+  ) {
+    _boardNumbers[_index] = updateFn(_boardNumbers[_index]);
+  }
 }
 
 LatLng? _latLngFromString(String? val) {

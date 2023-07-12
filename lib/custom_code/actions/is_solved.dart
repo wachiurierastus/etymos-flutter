@@ -8,12 +8,10 @@ import 'package:flutter/material.dart';
 // Begin custom action code
 // DO NOT REMOVE OR MODIFY THE CODE ABOVE!
 
-import 'dart:math' as math;
+import 'package:flutter/foundation.dart';
 
-Future<List<int>> shuffleBoard() async {
-  List<int> numbersList = [0, 1, 2, 3, 4, 5, 6, 7, 8];
-  numbersList.shuffle();
-  return numbersList;
+Future<bool> isSolved(List<int> board) async {
+  List<int> solvedList = [1, 2, 3, 4, 5, 6, 7, 8, 0];
+  return listEquals(solvedList, board);
+  // Add your function code here!
 }
-// Set your action name, define your arguments and return parameter,
-// and then add the boilerplate code using the button on the right!
