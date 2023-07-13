@@ -37,6 +37,7 @@ class _AddPhoneNumberWidgetState extends State<AddPhoneNumberWidget> {
         parameters: {'screen_name': 'AddPhoneNumber'});
     _model.phoneNumberController ??= TextEditingController();
     authManager.handlePhoneAuthStateChanges(context);
+    WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {}));
   }
 
   @override

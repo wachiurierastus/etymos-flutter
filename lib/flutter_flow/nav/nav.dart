@@ -7,7 +7,8 @@ import '../flutter_flow_theme.dart';
 import '/backend/backend.dart';
 
 import '../../auth/base_auth_user_provider.dart';
-
+import '../../backend/push_notifications/push_notifications_handler.dart'
+    show PushNotificationsHandler;
 import '../../index.dart';
 import '../../main.dart';
 import '../lat_lng.dart';
@@ -85,65 +86,86 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) => GoRouter(
           builder: (context, _) => appStateNotifier.loggedIn
               ? HomePageWidget()
               : LandingPageWidget(),
+          routes: [
+            FFRoute(
+              name: 'landingPage',
+              path: 'landingPage',
+              builder: (context, params) => LandingPageWidget(),
+            ),
+            FFRoute(
+              name: 'profilePage',
+              path: 'profilePage',
+              requireAuth: true,
+              builder: (context, params) => ProfilePageWidget(),
+            ),
+            FFRoute(
+              name: 'loginOrRegister',
+              path: 'loginOrRegister',
+              builder: (context, params) => LoginOrRegisterWidget(),
+            ),
+            FFRoute(
+              name: 'createAccount',
+              path: 'createAccount',
+              builder: (context, params) => CreateAccountWidget(),
+            ),
+            FFRoute(
+              name: 'forgotPassword',
+              path: 'forgotPassword',
+              requireAuth: true,
+              builder: (context, params) => ForgotPasswordWidget(),
+            ),
+            FFRoute(
+              name: 'editProfile',
+              path: 'editProfile',
+              builder: (context, params) => EditProfileWidget(
+                profilePage: params.getParam('profilePage', ParamType.String),
+              ),
+            ),
+            FFRoute(
+              name: 'HomePage',
+              path: 'homePage',
+              requireAuth: true,
+              builder: (context, params) => HomePageWidget(),
+            ),
+            FFRoute(
+              name: 'AddPhoneNumber',
+              path: 'addPhoneNumber',
+              builder: (context, params) => AddPhoneNumberWidget(
+                phoneNumber: params.getParam('phoneNumber', ParamType.String),
+              ),
+            ),
+            FFRoute(
+              name: 'AuthSMSCode',
+              path: 'authSMSCode',
+              builder: (context, params) => AuthSMSCodeWidget(),
+            ),
+            FFRoute(
+              name: 'SlidePuzzle',
+              path: 'slidePuzzle',
+              requireAuth: true,
+              builder: (context, params) => SlidePuzzleWidget(),
+            ),
+            FFRoute(
+              name: 'ChatPage',
+              path: 'chatPage',
+              requireAuth: true,
+              asyncParams: {
+                'chatUser': getDoc(['users'], UsersRecord.fromSnapshot),
+              },
+              builder: (context, params) => ChatPageWidget(
+                chatUser: params.getParam('chatUser', ParamType.Document),
+                chatRef: params.getParam(
+                    'chatRef', ParamType.DocumentReference, false, ['chats']),
+              ),
+            ),
+            FFRoute(
+              name: 'AllChatsPage',
+              path: 'allChatsPage',
+              requireAuth: true,
+              builder: (context, params) => AllChatsPageWidget(),
+            )
+          ].map((r) => r.toRoute(appStateNotifier)).toList(),
         ),
-        FFRoute(
-          name: 'landingPage',
-          path: '/landingPage',
-          builder: (context, params) => LandingPageWidget(),
-        ),
-        FFRoute(
-          name: 'profilePage',
-          path: '/profilePage',
-          requireAuth: true,
-          builder: (context, params) => ProfilePageWidget(),
-        ),
-        FFRoute(
-          name: 'loginOrRegister',
-          path: '/loginOrRegister',
-          builder: (context, params) => LoginOrRegisterWidget(),
-        ),
-        FFRoute(
-          name: 'createAccount',
-          path: '/createAccount',
-          builder: (context, params) => CreateAccountWidget(),
-        ),
-        FFRoute(
-          name: 'forgotPassword',
-          path: '/forgotPassword',
-          requireAuth: true,
-          builder: (context, params) => ForgotPasswordWidget(),
-        ),
-        FFRoute(
-          name: 'editProfile',
-          path: '/editProfile',
-          builder: (context, params) => EditProfileWidget(
-            profilePage: params.getParam('profilePage', ParamType.String),
-          ),
-        ),
-        FFRoute(
-          name: 'HomePage',
-          path: '/homePage',
-          requireAuth: true,
-          builder: (context, params) => HomePageWidget(),
-        ),
-        FFRoute(
-          name: 'AddPhoneNumber',
-          path: '/addPhoneNumber',
-          builder: (context, params) => AddPhoneNumberWidget(
-            phoneNumber: params.getParam('phoneNumber', ParamType.String),
-          ),
-        ),
-        FFRoute(
-          name: 'AuthSMSCode',
-          path: '/authSMSCode',
-          builder: (context, params) => AuthSMSCodeWidget(),
-        ),
-        FFRoute(
-          name: 'SlidePuzzle',
-          path: '/slidePuzzle',
-          requireAuth: true,
-          builder: (context, params) => SlidePuzzleWidget(),
-        )
       ].map((r) => r.toRoute(appStateNotifier)).toList(),
     );
 
@@ -331,7 +353,7 @@ class FFRoute {
                     ),
                   ),
                 )
-              : page;
+              : PushNotificationsHandler(child: page);
 
           final transitionInfo = state.transitionInfo;
           return transitionInfo.hasTransition

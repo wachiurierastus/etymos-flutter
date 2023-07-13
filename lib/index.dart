@@ -13,3 +13,5 @@ export '/add_phone_number/add_phone_number_widget.dart'
     show AddPhoneNumberWidget;
 export '/auth_s_m_s_code/auth_s_m_s_code_widget.dart' show AuthSMSCodeWidget;
 export '/slide_puzzle/slide_puzzle_widget.dart' show SlidePuzzleWidget;
+export '/chat_page/chat_page_widget.dart' show ChatPageWidget;
+export '/all_chats_page/all_chats_page_widget.dart' show AllChatsPageWidget;

@@ -27,6 +27,7 @@ class _AuthSMSCodeWidgetState extends State<AuthSMSCodeWidget> {
     _model = createModel(context, () => AuthSMSCodeModel());
 
     logFirebaseEvent('screen_view', parameters: {'screen_name': 'AuthSMSCode'});
+    WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {}));
   }
 
   @override

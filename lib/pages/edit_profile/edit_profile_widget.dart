@@ -53,6 +53,7 @@ class _EditProfileWidgetState extends State<EditProfileWidget> {
             dateTimeFromSecondsSinceEpoch(
                 getCurrentTimestamp.secondsSinceEpoch)));
     authManager.handlePhoneAuthStateChanges(context);
+    WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {}));
   }
 
   @override

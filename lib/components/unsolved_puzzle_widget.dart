@@ -28,6 +28,8 @@ class _UnsolvedPuzzleWidgetState extends State<UnsolvedPuzzleWidget> {
   void initState() {
     super.initState();
     _model = createModel(context, () => UnsolvedPuzzleModel());
+
+    WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {}));
   }
 
   @override

@@ -1,5 +1,7 @@
 import 'dart:async';
 
+import 'package:from_css_color/from_css_color.dart';
+import '/backend/algolia/algolia_manager.dart';
 import 'package:collection/collection.dart';
 
 import '/backend/schema/util/firestore_util.dart';
@@ -57,6 +59,36 @@ class WordsMeaningsRecord extends FirestoreRecord {
     DocumentReference reference,
   ) =>
       WordsMeaningsRecord._(reference, mapFromFirestore(data));
+
+  static WordsMeaningsRecord fromAlgolia(AlgoliaObjectSnapshot snapshot) =>
+      WordsMeaningsRecord.getDocumentFromData(
+        {
+          'word': snapshot.data['word'],
+          'size': snapshot.data['size']?.round(),
+          'category': safeGet(
+            () => toRef(snapshot.data['category']),
+          ),
+        },
+        WordsMeaningsRecord.collection.doc(snapshot.objectID),
+      );
+
+  static Future<List<WordsMeaningsRecord>> search({
+    String? term,
+    FutureOr<LatLng>? location,
+    int? maxResults,
+    double? searchRadiusMeters,
+    bool useCache = false,
+  }) =>
+      FFAlgoliaManager.instance
+          .algoliaQuery(
+            index: 'wordsMeanings',
+            term: term,
+            maxResults: maxResults,
+            location: location,
+            searchRadiusMeters: searchRadiusMeters,
+            useCache: useCache,
+          )
+          .then((r) => r.map(fromAlgolia).toList());
 
   @override
   String toString() =>

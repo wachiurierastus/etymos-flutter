@@ -29,6 +29,7 @@ class _ForgotPasswordWidgetState extends State<ForgotPasswordWidget> {
     logFirebaseEvent('screen_view',
         parameters: {'screen_name': 'forgotPassword'});
     _model.emailAddressController ??= TextEditingController();
+    WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {}));
   }
 
   @override

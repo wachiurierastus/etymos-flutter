@@ -1,5 +1,7 @@
 import 'dart:async';
 
+import 'package:from_css_color/from_css_color.dart';
+import '/backend/algolia/algolia_manager.dart';
 import 'package:collection/collection.dart';
 
 import '/backend/schema/util/firestore_util.dart';
@@ -82,6 +84,53 @@ class ChatsRecord extends FirestoreRecord {
     DocumentReference reference,
   ) =>
       ChatsRecord._(reference, mapFromFirestore(data));
+
+  static ChatsRecord fromAlgolia(AlgoliaObjectSnapshot snapshot) =>
+      ChatsRecord.getDocumentFromData(
+        {
+          'users': safeGet(
+            () => snapshot.data['users'].map((s) => toRef(s)).toList(),
+          ),
+          'user_a': safeGet(
+            () => toRef(snapshot.data['user_a']),
+          ),
+          'user_b': safeGet(
+            () => toRef(snapshot.data['user_b']),
+          ),
+          'last_message': snapshot.data['last_message'],
+          'last_message_time': safeGet(
+            () => DateTime.fromMillisecondsSinceEpoch(
+                snapshot.data['last_message_time']),
+          ),
+          'last_message_sent_by': safeGet(
+            () => toRef(snapshot.data['last_message_sent_by']),
+          ),
+          'last_message_seen_by': safeGet(
+            () => snapshot.data['last_message_seen_by']
+                .map((s) => toRef(s))
+                .toList(),
+          ),
+        },
+        ChatsRecord.collection.doc(snapshot.objectID),
+      );
+
+  static Future<List<ChatsRecord>> search({
+    String? term,
+    FutureOr<LatLng>? location,
+    int? maxResults,
+    double? searchRadiusMeters,
+    bool useCache = false,
+  }) =>
+      FFAlgoliaManager.instance
+          .algoliaQuery(
+            index: 'chats',
+            term: term,
+            maxResults: maxResults,
+            location: location,
+            searchRadiusMeters: searchRadiusMeters,
+            useCache: useCache,
+          )
+          .then((r) => r.map(fromAlgolia).toList());
 
   @override
   String toString() =>

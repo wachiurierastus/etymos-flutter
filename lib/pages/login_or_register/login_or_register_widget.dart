@@ -109,6 +109,8 @@ class _LoginOrRegisterWidgetState extends State<LoginOrRegisterWidget>
     _model.confirmpasswordController ??= TextEditingController();
     _model.emailAddressLoginController ??= TextEditingController();
     _model.passwordLoginController ??= TextEditingController();
+
+    WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {}));
   }
 
   @override

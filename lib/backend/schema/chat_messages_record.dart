@@ -1,5 +1,7 @@
 import 'dart:async';
 
+import 'package:from_css_color/from_css_color.dart';
+import '/backend/algolia/algolia_manager.dart';
 import 'package:collection/collection.dart';
 
 import '/backend/schema/util/firestore_util.dart';
@@ -69,6 +71,43 @@ class ChatMessagesRecord extends FirestoreRecord {
     DocumentReference reference,
   ) =>
       ChatMessagesRecord._(reference, mapFromFirestore(data));
+
+  static ChatMessagesRecord fromAlgolia(AlgoliaObjectSnapshot snapshot) =>
+      ChatMessagesRecord.getDocumentFromData(
+        {
+          'user': safeGet(
+            () => toRef(snapshot.data['user']),
+          ),
+          'chat': safeGet(
+            () => toRef(snapshot.data['chat']),
+          ),
+          'text': snapshot.data['text'],
+          'image': snapshot.data['image'],
+          'timestamp': safeGet(
+            () =>
+                DateTime.fromMillisecondsSinceEpoch(snapshot.data['timestamp']),
+          ),
+        },
+        ChatMessagesRecord.collection.doc(snapshot.objectID),
+      );
+
+  static Future<List<ChatMessagesRecord>> search({
+    String? term,
+    FutureOr<LatLng>? location,
+    int? maxResults,
+    double? searchRadiusMeters,
+    bool useCache = false,
+  }) =>
+      FFAlgoliaManager.instance
+          .algoliaQuery(
+            index: 'chat_messages',
+            term: term,
+            maxResults: maxResults,
+            location: location,
+            searchRadiusMeters: searchRadiusMeters,
+            useCache: useCache,
+          )
+          .then((r) => r.map(fromAlgolia).toList());
 
   @override
   String toString() =>

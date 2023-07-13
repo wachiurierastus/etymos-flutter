@@ -30,6 +30,7 @@ class _SlidePuzzleWidgetState extends State<SlidePuzzleWidget> {
     _model = createModel(context, () => SlidePuzzleModel());
 
     logFirebaseEvent('screen_view', parameters: {'screen_name': 'SlidePuzzle'});
+    WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {}));
   }
 
   @override
@@ -100,25 +101,27 @@ class _SlidePuzzleWidgetState extends State<SlidePuzzleWidget> {
                               FlutterFlowTheme.of(context).bodyMediumFamily),
                         ),
                   ),
-                  GradientText(
-                    valueOrDefault<String>(
-                      FFAppState().moves.toString(),
-                      '0',
+                  Flexible(
+                    child: GradientText(
+                      valueOrDefault<String>(
+                        FFAppState().moves.toString(),
+                        '0',
+                      ),
+                      style: FlutterFlowTheme.of(context).bodyMedium.override(
+                            fontFamily:
+                                FlutterFlowTheme.of(context).bodyMediumFamily,
+                            color: FlutterFlowTheme.of(context).primary,
+                            fontSize: 30.0,
+                            useGoogleFonts: GoogleFonts.asMap().containsKey(
+                                FlutterFlowTheme.of(context).bodyMediumFamily),
+                          ),
+                      colors: [
+                        FlutterFlowTheme.of(context).primary,
+                        FlutterFlowTheme.of(context).secondary
+                      ],
+                      gradientDirection: GradientDirection.ltr,
+                      gradientType: GradientType.linear,
                     ),
-                    style: FlutterFlowTheme.of(context).bodyMedium.override(
-                          fontFamily:
-                              FlutterFlowTheme.of(context).bodyMediumFamily,
-                          color: FlutterFlowTheme.of(context).primary,
-                          fontSize: 30.0,
-                          useGoogleFonts: GoogleFonts.asMap().containsKey(
-                              FlutterFlowTheme.of(context).bodyMediumFamily),
-                        ),
-                    colors: [
-                      FlutterFlowTheme.of(context).primary,
-                      FlutterFlowTheme.of(context).secondary
-                    ],
-                    gradientDirection: GradientDirection.ltr,
-                    gradientType: GradientType.linear,
                   ),
                 ],
               ),
@@ -135,6 +138,10 @@ class _SlidePuzzleWidgetState extends State<SlidePuzzleWidget> {
                   logFirebaseEvent('Button_update_app_state');
                   setState(() {
                     FFAppState().isStarted = true;
+                  });
+                  logFirebaseEvent('Button_update_app_state');
+                  setState(() {
+                    FFAppState().moves = 0;
                   });
 
                   setState(() {});

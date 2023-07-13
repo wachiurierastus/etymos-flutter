@@ -379,6 +379,8 @@ class _LandingPageWidgetState extends State<LandingPageWidget>
           !anim.applyInitialState),
       this,
     );
+
+    WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {}));
   }
 
   @override
