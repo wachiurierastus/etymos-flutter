@@ -2,7 +2,7 @@
 
 ## Table of Contents
 - [Introduction](#introduction)
-- Built With (#built with)
+- [Built With](#built with)
 - How it works
 - Environment and Repository Setup
 
