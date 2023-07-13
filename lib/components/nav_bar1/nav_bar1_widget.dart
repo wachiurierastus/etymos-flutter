@@ -2,6 +2,7 @@ import '/flutter_flow/flutter_flow_icon_button.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'nav_bar1_model.dart';
@@ -27,6 +28,8 @@ class _NavBar1WidgetState extends State<NavBar1Widget> {
   void initState() {
     super.initState();
     _model = createModel(context, () => NavBar1Model());
+
+    WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {}));
   }
 
   @override
@@ -150,13 +153,24 @@ class _NavBar1WidgetState extends State<NavBar1Widget> {
                 borderRadius: 30.0,
                 borderWidth: 1.0,
                 buttonSize: 50.0,
-                icon: Icon(
-                  Icons.favorite_rounded,
+                icon: FaIcon(
+                  FontAwesomeIcons.gamepad,
                   color: Color(0xFF9299A1),
                   size: 24.0,
                 ),
-                onPressed: () {
-                  print('IconButton pressed ...');
+                onPressed: () async {
+                  logFirebaseEvent('NAV_BAR1_COMP_gamepad_ICN_ON_TAP');
+                  logFirebaseEvent('IconButton_navigate_to');
+
+                  context.pushNamed(
+                    'SlidePuzzle',
+                    extra: <String, dynamic>{
+                      kTransitionInfoKey: TransitionInfo(
+                        hasTransition: true,
+                        transitionType: PageTransitionType.bottomToTop,
+                      ),
+                    },
+                  );
                 },
               ),
               FlutterFlowIconButton(
