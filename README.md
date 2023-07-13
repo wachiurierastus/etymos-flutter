@@ -1,7 +1,7 @@
 # Turathi: An Android Application That Improves Word Power Through Culturally Contextualized Word Games
 
 ## Table of Contents
-- Introduction
+- [Introduction](#introduction)
 - Built With 
 - How it works
 - Environment and Repository Setup
