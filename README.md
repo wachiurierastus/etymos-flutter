@@ -22,5 +22,10 @@ Once a user creates an account, they can choose from an array of practice sets t
     ```bash
     git clone https://github.com/wachiurierastus/etymos-flutter
     ```
+- Install from flutterflow
+
+    ```bash
+    https://app.flutterflow.io/project/etymos-8dtc5r
+    ```
 
 
